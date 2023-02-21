@@ -1,5 +1,6 @@
 package ui.widgets;
 
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,4 +87,18 @@ public abstract class GtkContainer extends GtkWidget
 	 * Returns the relative position of the child
 	 */
 	public abstract Point getChildPos(IGtkWidget child);
+	
+	/**
+	 * Recursively renders all children
+	 */
+	public void sendRecursiveRenderSignal(Graphics2D g)
+	{
+		for(IGtkWidget widget : children)
+		{
+			if(widget instanceof GtkContainer container)
+				container.sendRecursiveRenderSignal(g);
+			if(widget instanceof RenderableWidget renderable)
+				renderable.getRenderer().render(g);
+		}
+	}
 }

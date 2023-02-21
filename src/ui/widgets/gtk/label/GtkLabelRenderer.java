@@ -27,9 +27,6 @@ public class GtkLabelRenderer extends WidgetRenderer
 	@Override
 	public void render(Graphics2D g)
 	{
-		g.setColor(Color.white);
-		g.fillRect(0, 0, 500, 500);
-		
 		/* TODO most properties are ignored here. Fix that, future me! */
 		/* TODO also the rotation does only work for angles in [0;90]. Deal with it or fix it idc */
 		
