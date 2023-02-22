@@ -2,6 +2,7 @@ package ui.widgets;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -11,7 +12,7 @@ import javax.xml.bind.annotation.XmlType;
 import utils.Nullable;
 
 @XmlType(name = GtkContainer.XML_NAME)
-public abstract class GtkContainer extends GtkWidget
+public abstract class GtkContainer extends GtkWidget implements Iterable<IGtkWidget>
 {
 	public static final String XML_NAME = "GtkContainer";
 	
@@ -111,5 +112,11 @@ public abstract class GtkContainer extends GtkWidget
 			if(widget instanceof RenderableWidget renderable)
 				renderable.getRenderer().render(g);
 		}
+	}
+	
+	@Override
+	public Iterator<IGtkWidget> iterator()
+	{
+		return children.iterator();
 	}
 }

@@ -1,6 +1,5 @@
 package ui.widgets;
 
-import java.awt.Dimension;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,17 +73,11 @@ public abstract class GtkWidget implements IGtkWidget
 		return setParent(null);
 	}
 	
-	/**
-	 * Updates a value for a specific property. This call fails if the propertyName is invalid or the new value
-	 * has a different type than the old value.
-	 * @param propertyName The name of the property to be changed
-	 * @param newValue The new value
-	 * @return {@code true} if the property has been updated. {@code false} if the call failed.
-	 */
+	@Override
 	public boolean setProperty(String propertyName, Object newValue)
 	{
 		if(!properties.containsKey(propertyName))
-			return false;
+			throw new IllegalArgumentException("Unknown property \"" + propertyName + "\" for type \"" + getClass().getSimpleName() + "\".");
 		
 		Class<?> oldValClass = properties.get(propertyName).getClass();
 		Class<?> newValClass = newValue.getClass();
@@ -165,5 +158,9 @@ public abstract class GtkWidget implements IGtkWidget
 	public int getHeightRequest()
 	{
 		return (int) properties.get("height-request");
+	}
+	public String getName()
+	{
+		return (String) properties.get("name");
 	}
 }

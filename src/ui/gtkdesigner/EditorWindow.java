@@ -7,6 +7,8 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 
 import ui.InterfaceRoot;
+import ui.gtkdesigner.propertypanel.PropertyPanel;
+import ui.widgets.IGtkWidget;
 
 public class EditorWindow
 {
@@ -20,6 +22,11 @@ public class EditorWindow
 	
 	private JFrame frame;
 	
+	private PropertyPanel propertyPanel;
+	private WorkingArea workingArea;
+	private InterfaceTree interfaceTree;
+	private WidgetPanel widgetPanel;
+	
 	public EditorWindow(String title, InterfaceRoot interfaceRoot)
 	{
 		frame = new JFrame(title);
@@ -27,6 +34,7 @@ public class EditorWindow
 		frame.setBounds(DEFAULT_BOUNDS);
 		frame.setLayout(null);
 		frame.setVisible(true);
+		frame.setResizable(false); /* TODO support resizing frame. */
 		initComponents(interfaceRoot);
 	}
 	
@@ -35,19 +43,51 @@ public class EditorWindow
 		frame.repaint(0);
 	}
 	
+	public PropertyPanel getPropertyPanel()
+	{
+		return propertyPanel;
+	}
+	public WorkingArea getWorkingArea()
+	{
+		return workingArea;
+	}
+	public InterfaceTree getInterfaceTree()
+	{
+		return interfaceTree;
+	}
+	
 	public void initComponents(InterfaceRoot interfaceRoot)
 	{
 		Dimension frameSize = frame.getContentPane().getSize();
 		
-		int widgetPanelWidth = (int) (frameSize.width * 0.2f);
+		int widgetPanelWidth = (int) (frameSize.width * 0.2);
+		int workingAreaWidth = (int) (frameSize.width * 0.6);
+		int ifTreeWidth = (int) (frameSize.width * 0.2);
 		
-		WidgetPanel widgetPanel = new WidgetPanel();
-		widgetPanel.setBounds(0, (int) (frameSize.height * 0.1f), widgetPanelWidth, (int)(frameSize.height * 0.9f));
+		widgetPanel = new WidgetPanel();
+		widgetPanel.setBounds(0, 0, widgetPanelWidth, (int)(frameSize.height));
 		frame.add(widgetPanel);
 		widgetPanel.createTabs();
 		
-		WorkingArea workingArea = new WorkingArea(interfaceRoot);
-		workingArea.setBounds(widgetPanelWidth, 0, frameSize.width - widgetPanelWidth, frameSize.height);
+		workingArea = new WorkingArea(interfaceRoot);
+		workingArea.setBounds(widgetPanelWidth, 0, workingAreaWidth, (int) (frameSize.height * 0.8));
 		frame.add(workingArea);
+		
+		interfaceTree = new InterfaceTree(interfaceRoot);
+		interfaceTree.setBounds(widgetPanelWidth + workingAreaWidth, 0, ifTreeWidth, frameSize.height);
+		interfaceTree.initComponents();
+		interfaceTree.addSelectionListener(this::interfaceTreeSelection);
+		frame.add(interfaceTree);
+		
+		propertyPanel = new PropertyPanel();
+		propertyPanel.setBounds(widgetPanelWidth, (int)(frameSize.height*0.8), workingAreaWidth, (int)(frameSize.height*0.2));
+		propertyPanel.initComponents();
+		frame.add(propertyPanel);
+
+	}
+	
+	private void interfaceTreeSelection(IGtkWidget selectedWidget)
+	{
+		propertyPanel.initForWidget(selectedWidget);
 	}
 }

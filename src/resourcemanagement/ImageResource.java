@@ -4,7 +4,8 @@ import java.io.File;
 
 public enum ImageResource
 {
-	GTK_LABEL_ICON_IMAGE(new File("./images/widget/gtkLabel.png"));
+	GTK_LABEL_ICON_IMAGE(new File("./images/widget/GtkLabel.png")),
+	GTK_GRID_ICON_IMAGE(new File("./images/widget/GtkGrid.png"));
 	
 	private File file;
 	

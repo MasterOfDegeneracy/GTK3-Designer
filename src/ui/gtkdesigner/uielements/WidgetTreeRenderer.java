@@ -3,7 +3,8 @@ package ui.gtkdesigner.uielements;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,8 +13,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 
-import resourcemanagement.ImageFactory;
-import resourcemanagement.ImageResource;
+import ui.gtkdesigner.WidgetPanel.WidgetPanelTreeNodeData;
 
 public class WidgetTreeRenderer implements TreeCellRenderer
 {
@@ -25,7 +25,6 @@ public class WidgetTreeRenderer implements TreeCellRenderer
 	
 	public static final Color LEAF_BACKGROUND_COLOR = Color.white;
 	
-	public static final Image LABEL_ICON_IMAGE = ImageFactory.get(ImageResource.GTK_LABEL_ICON_IMAGE).getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 	public static final String LABEL_ICON_DESC = "Add a new GtkLabel...";
 	
 	@Override
@@ -33,20 +32,33 @@ public class WidgetTreeRenderer implements TreeCellRenderer
 	{
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
 		
+		WidgetPanelTreeNodeData data = (WidgetPanelTreeNodeData) node.getUserObject();
+		String text = data.label;
+		
 		if(!leaf)
 		{
-			JLabel label = new JLabel(node.getUserObject().toString());
+			JLabel label = new JLabel(text);
 			label.setForeground(selected ? SELECTED_COLOR : expanded ? EXPANDED_COLOR : STANDARD_COLOR);
 			label.setFont(FONT);
 			return label;
 		}
 		else
 		{
-			JButton button = new JButton(node.getUserObject().toString());
+			JButton button = new JButton(text);
 			button.setForeground(Color.black);
 			button.setBackground(LEAF_BACKGROUND_COLOR);
 			button.setFont(FONT);
-			button.setIcon(new ImageIcon(LABEL_ICON_IMAGE, LABEL_ICON_DESC));
+			button.setIcon(new ImageIcon(data.icon, LABEL_ICON_DESC));
+			button.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					System.out.println(button.getText());
+				}
+				
+			});
 			return button;
 		}
 	}

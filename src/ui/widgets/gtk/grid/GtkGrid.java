@@ -96,6 +96,8 @@ public class GtkGrid extends GtkContainer
 	@Override
 	public void registerProperties(Map<String, Object> properties)
 	{
+		super.registerProperties(properties);
+		
 		properties.put("baseline-row", 0);
 		properties.put("column-homogenous", false);
 		properties.put("column-spacing", 0);

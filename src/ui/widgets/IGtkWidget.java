@@ -52,4 +52,14 @@ public interface IGtkWidget
 	
 	public abstract int getWidthRequest();
 	public abstract int getHeightRequest();
+	public abstract String getName();
+	
+	/**
+	 * Updates a value for a specific property. This call fails if the propertyName is invalid or the new value
+	 * has a different type than the old value.
+	 * @param propertyName The name of the property to be changed
+	 * @param newValue The new value
+	 * @return {@code true} if the property has been updated.
+	 */
+	public boolean setProperty(String propertyName, Object newValue);
 }
