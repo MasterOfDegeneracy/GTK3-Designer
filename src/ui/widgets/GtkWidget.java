@@ -1,5 +1,6 @@
 package ui.widgets;
 
+import java.awt.Dimension;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +56,22 @@ public abstract class GtkWidget implements IGtkWidget
 	@Override public boolean hasParent()
 	{
 		return getParent() != null;
+	}
+	
+	@Override public boolean setParent(GtkContainer parent)
+	{
+		if(!(this.hasParent() ^ parent != null))
+			return false;
+		this.parent = parent;
+		return true;
+	}
+	
+	/**
+	 * equivalent to setParent(null).
+	 */
+	public boolean detachParent()
+	{
+		return setParent(null);
 	}
 	
 	/**
@@ -135,5 +152,18 @@ public abstract class GtkWidget implements IGtkWidget
 		properties.put("visible", true);
 		properties.put("width-request", -1);
 		// window is not writable
+	}
+	
+	public boolean isAppPaintable()
+	{
+		return (boolean) properties.get("app-paintable");
+	}
+	public int getWidthRequest()
+	{
+		return (int) properties.get("width-request");
+	}
+	public int getHeightRequest()
+	{
+		return (int) properties.get("height-request");
 	}
 }

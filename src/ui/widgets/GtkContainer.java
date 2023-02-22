@@ -25,6 +25,10 @@ public abstract class GtkContainer extends GtkWidget
 		for(IGtkWidget child : children)
 			this.children.add(child);
 	}
+	public GtkContainer()
+	{
+		
+	}
 	
 	/**
 	 * Adds a child to the container. If the child is already added to the container, the child will not be added.
@@ -33,7 +37,14 @@ public abstract class GtkContainer extends GtkWidget
 	 */
 	public boolean addChild(IGtkWidget widget)
 	{
-		return widget != null ? children.add(widget) : false;
+		if(widget == null)
+			return false;
+		if(!widget.setParent(this))
+			return false;
+		if(!children.add(widget))
+			return false;
+		
+		return true;
 	}
 	
 	/**

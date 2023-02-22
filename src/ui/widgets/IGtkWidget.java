@@ -25,6 +25,11 @@ public interface IGtkWidget
 	public boolean hasParent();
 	
 	/**
+	 * Sets the parent of this widget. If this widget already has a parent, the parent will not be changed and the method returns {@code false}.
+	 */
+	public boolean setParent(GtkContainer parent);
+	
+	/**
 	 * Returns the widget's position relative to the top-level element.
 	 */
 	public default Point getAbsolutePosition()
@@ -37,7 +42,6 @@ public interface IGtkWidget
 		Point pt = parent.getAbsolutePosition();
 		Point relPos = parent.getChildPos(this);
 		pt = new Point(pt.x + relPos.x, pt.y + relPos.y);
-		
 		return pt;
 	}
 	
@@ -45,4 +49,7 @@ public interface IGtkWidget
 	 * Returns the minimum size of this widget. This is usually the size of the rendered content
 	 */
 	public abstract Dimension getMinimumSize();
+	
+	public abstract int getWidthRequest();
+	public abstract int getHeightRequest();
 }
