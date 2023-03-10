@@ -4,6 +4,8 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlType;
 
+import ui.InterfaceRoot;
+import ui.widgets.BlueprintRenderer;
 import ui.widgets.GtkWidget;
 import ui.widgets.RenderableWidget;
 import utils.gtkdefs.GtkJustification;
@@ -17,8 +19,10 @@ public class GtkLabel extends GtkWidget implements RenderableWidget
 	
 	private GtkLabelRenderer renderer;
 	
-	public GtkLabel()
+	public GtkLabel(InterfaceRoot interfaceRoot)
 	{
+		super(interfaceRoot);
+		
 		this.renderer = new GtkLabelRenderer(this);
 	}
 	
@@ -26,6 +30,12 @@ public class GtkLabel extends GtkWidget implements RenderableWidget
 	public GtkLabelRenderer getRenderer()
 	{
 		return renderer;
+	}
+	
+	@Override
+	public BlueprintRenderer createBlueprintRenderer()
+	{
+		return new BlueprintRenderer(this);
 	}
 	
 	/* Property section */

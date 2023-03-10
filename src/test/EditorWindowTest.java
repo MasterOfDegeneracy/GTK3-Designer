@@ -11,19 +11,19 @@ public class EditorWindowTest
 	{
 		InterfaceRoot interfaceRoot = new InterfaceRoot();
 		
-		GtkLabel label = new GtkLabel();
+		GtkLabel label = new GtkLabel(interfaceRoot);
 		label.setProperty("label", "This is a label :)");
 		
-		GtkLabel label2 = new GtkLabel();
+		GtkLabel label2 = new GtkLabel(interfaceRoot);
 		label2.setProperty("label", "And you won't believe it, but this is another label. In another cell of the grid. Wow.");
 		
-		GtkLabel label3 = new GtkLabel();
+		GtkLabel label3 = new GtkLabel(interfaceRoot);
 		label3.setProperty("label", "Now there is a final label. It will probably destroy my layout code.");
 		
-		GtkLabel label4 = new GtkLabel();
+		GtkLabel label4 = new GtkLabel(interfaceRoot);
 		label4.setProperty("label", "Aaaaandd it did. But hopefully it's fixed now. hOpEfUlLy...");
 		
-		GtkGrid grid = new GtkGrid();
+		GtkGrid grid = new GtkGrid(interfaceRoot);
 		boolean ret1 = grid.addChild(label, 0, 0);
 		boolean ret2 = grid.addChild(label2, 1, 1);
 		boolean ret3 = grid.addChild(label3, 1, 2);
@@ -36,12 +36,10 @@ public class EditorWindowTest
 		
 		interfaceRoot.addWidget(grid);
 		
-		EditorWindow ew = new EditorWindow("Editor Window Test", interfaceRoot);
+		new EditorWindow("Editor Window Test", interfaceRoot);
 		
-		while(true)
-		{
-			ew.repaint();
-			Thread.sleep(100);
-		}
+		GtkGrid placeGrid = new GtkGrid(interfaceRoot);
+		placeGrid.setProperty("width-request", 100);
+		placeGrid.setProperty("height-request", 100);
 	}
 }

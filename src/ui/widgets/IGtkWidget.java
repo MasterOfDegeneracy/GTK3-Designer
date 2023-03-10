@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.util.Map;
 
+import ui.InterfaceRoot;
+import ui.widgets.GtkWidget.WidgetChangedListener;
 import utils.Nullable;
 
 public interface IGtkWidget
@@ -24,6 +26,8 @@ public interface IGtkWidget
 	 */
 	public boolean hasParent();
 	
+	public InterfaceRoot getInterfaceRoot();
+	
 	/**
 	 * Sets the parent of this widget. If this widget already has a parent, the parent will not be changed and the method returns {@code false}.
 	 */
@@ -35,7 +39,7 @@ public interface IGtkWidget
 	public default Point getAbsolutePosition()
 	{
 		if(!this.hasParent())
-			return new Point(100, 100);
+			return getInterfaceRoot().getTopLevelWidgetPosition(this);
 		
 		GtkContainer parent = getParent();
 		
@@ -62,4 +66,21 @@ public interface IGtkWidget
 	 * @return {@code true} if the property has been updated.
 	 */
 	public boolean setProperty(String propertyName, Object newValue);
+	
+	
+	/**
+	 * Returns the blueprint renderer for this widget. A blueprint renderer is a renderer that draws the GtkWidget
+	 * in a way, that the user sees relevant information of the widget while placing or transforming it. For example
+	 * the blueprint renderer for a GtkGrid should draw the outlines of its cells.
+	 */
+	public BlueprintRenderer getBlueprintRenderer();
+	
+	/**
+	 * Creates a new blueprint renderer for this widget
+	 */
+	public BlueprintRenderer createBlueprintRenderer();
+	
+	public void fireChangedListeners();
+	public boolean addWidgetChangedListener(WidgetChangedListener l);
+	public boolean removeWidgetChangedListener(WidgetChangedListener l);
 }

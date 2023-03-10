@@ -27,6 +27,8 @@ public class EditorWindow
 	private InterfaceTree interfaceTree;
 	private WidgetPanel widgetPanel;
 	
+	private volatile IGtkWidget selectedWidget;
+	
 	public EditorWindow(String title, InterfaceRoot interfaceRoot)
 	{
 		frame = new JFrame(title);
@@ -36,6 +38,8 @@ public class EditorWindow
 		frame.setVisible(true);
 		frame.setResizable(false); /* TODO support resizing frame. */
 		initComponents(interfaceRoot);
+		frame.revalidate();
+		frame.repaint();
 	}
 	
 	public void repaint()
@@ -69,7 +73,7 @@ public class EditorWindow
 		frame.add(widgetPanel);
 		widgetPanel.createTabs();
 		
-		workingArea = new WorkingArea(interfaceRoot);
+		workingArea = new WorkingArea(this, interfaceRoot);
 		workingArea.setBounds(widgetPanelWidth, 0, workingAreaWidth, (int) (frameSize.height * 0.8));
 		frame.add(workingArea);
 		
@@ -77,17 +81,28 @@ public class EditorWindow
 		interfaceTree.setBounds(widgetPanelWidth + workingAreaWidth, 0, ifTreeWidth, frameSize.height);
 		interfaceTree.initComponents();
 		interfaceTree.addSelectionListener(this::interfaceTreeSelection);
+		interfaceTree.addSelectionListener((widget)->selectWidget(widget));
 		frame.add(interfaceTree);
+		
 		
 		propertyPanel = new PropertyPanel();
 		propertyPanel.setBounds(widgetPanelWidth, (int)(frameSize.height*0.8), workingAreaWidth, (int)(frameSize.height*0.2));
 		propertyPanel.initComponents();
 		frame.add(propertyPanel);
-
 	}
 	
 	private void interfaceTreeSelection(IGtkWidget selectedWidget)
 	{
 		propertyPanel.initForWidget(selectedWidget);
+	}
+	
+	public IGtkWidget getSelectedWidget()
+	{
+		return selectedWidget;
+	}
+	public void selectWidget(IGtkWidget widget)
+	{
+		this.selectedWidget = widget;
+		frame.repaint();
 	}
 }

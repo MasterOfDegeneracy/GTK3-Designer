@@ -9,6 +9,8 @@ import java.util.function.Predicate;
 
 import javax.xml.bind.annotation.XmlType;
 
+import ui.InterfaceRoot;
+import ui.gtkdesigner.EditorWindow;
 import utils.Nullable;
 
 @XmlType(name = GtkContainer.XML_NAME)
@@ -21,14 +23,16 @@ public abstract class GtkContainer extends GtkWidget implements Iterable<IGtkWid
 	 */
 	private List<IGtkWidget> children = new LinkedList<>();
 	
-	public GtkContainer(IGtkWidget[] children)
+	public GtkContainer(InterfaceRoot interfaceRoot, IGtkWidget[] children)
 	{
+		super(interfaceRoot);
+		
 		for(IGtkWidget child : children)
 			this.children.add(child);
 	}
-	public GtkContainer()
+	public GtkContainer(InterfaceRoot interfaceRoot)
 	{
-		
+		super(interfaceRoot);
 	}
 	
 	/**
@@ -100,17 +104,24 @@ public abstract class GtkContainer extends GtkWidget implements Iterable<IGtkWid
 	 */
 	public abstract Point getChildPos(IGtkWidget child);
 	
+	public abstract boolean dropChild(IGtkWidget child, Point relativeLocation);
+	
 	/**
 	 * Recursively renders all children
 	 */
-	public void sendRecursiveRenderSignal(Graphics2D g)
+	public void sendRecursiveRenderSignal(EditorWindow ew, InterfaceRoot ir, Graphics2D g, Point offset)
 	{
+		
 		for(IGtkWidget widget : children)
 		{
+				
 			if(widget instanceof GtkContainer container)
-				container.sendRecursiveRenderSignal(g);
+				container.sendRecursiveRenderSignal(ew, ir, g, offset);
 			if(widget instanceof RenderableWidget renderable)
-				renderable.getRenderer().render(g);
+				renderable.getRenderer().render(g, new Point(renderable.getAbsolutePosition().x + offset.x, renderable.getAbsolutePosition().y + offset.y));
+			
+			if(ew.getSelectedWidget() == widget)
+				widget.getBlueprintRenderer().render(g, new Point(widget.getAbsolutePosition().x + offset.x, widget.getAbsolutePosition().y + offset.y));
 		}
 	}
 	

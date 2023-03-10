@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
@@ -24,9 +25,13 @@ public class InterfaceTreeRenderer implements TreeCellRenderer
 	{
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
 		
-		JLabel label = new JLabel(node.getUserObject() instanceof IGtkWidget
+		Object userObject = node.getUserObject();
+		if(userObject == null)
+			return new JPanel();
+		
+		JLabel label = new JLabel(userObject instanceof IGtkWidget
 				? getNameForDisplay((IGtkWidget) node.getUserObject())
-				: node.getUserObject().toString());
+				: userObject.toString());
 		
 		label.setFont(expanded ? EXPANDED_FONT : NOT_EXPANDED_FONT);
 		label.setForeground(Color.white);

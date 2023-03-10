@@ -9,13 +9,16 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import ui.InterfaceRoot;
+import ui.InterfaceRoot.WidgetAddedListener;
 import ui.gtkdesigner.uielements.InterfaceTreeRenderer;
 import ui.widgets.GtkContainer;
+import ui.widgets.GtkWidget.WidgetChangedListener;
 import ui.widgets.IGtkWidget;
 
 @SuppressWarnings("serial")
@@ -34,6 +37,25 @@ public class InterfaceTree extends JPanel
 		setBackground(Color.black);
 		
 		this.interfaceRoot = interfaceRoot;
+		
+		this.interfaceRoot.addWidgetAddedListener(new WidgetAddedListener() {
+
+			@Override
+			public void onWidgetAdded(IGtkWidget widget)
+			{
+				refreshTree();
+			}
+			
+		});
+		// The changed listener is needed because the WidgetAddedListener doesn't fire if a widget is added to a non-top-level container. 
+		this.interfaceRoot.addWidgetChangedListener(new WidgetChangedListener() {
+			
+			@Override
+			public void onChange(IGtkWidget widget)
+			{
+				refreshTree();
+			}
+		});
 	}
 	
 	public void addSelectionListener(Consumer<IGtkWidget> listener)
@@ -45,26 +67,16 @@ public class InterfaceTree extends JPanel
 	{
 		removeAll();
 		
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Widget Tree");
-		
-		interfaceRoot.forEach((IGtkWidget widget) -> {
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(widget);
-			rootNode.add(node);
-			
-			if(widget instanceof GtkContainer container)
-			{
-				addNodes(node, container);
-			}
-		});
-		
 		DefaultTreeSelectionModel selectionModel = new DefaultTreeSelectionModel();
 		selectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		
-		tree = new JTree(rootNode);
+		tree = new JTree();
+		refreshTree();
 		tree.setCellRenderer(new InterfaceTreeRenderer());
 		tree.setBounds(0, 0, getWidth(), getHeight());
 		tree.setBackground(BG_COLOR);
 		tree.setSelectionModel(selectionModel);
+		tree.setRootVisible(false);
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 
 			@Override
@@ -90,6 +102,22 @@ public class InterfaceTree extends JPanel
 			
 		});
 		add(tree);
+	}
+	
+	private void refreshTree()
+	{
+		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(null);
+		
+		interfaceRoot.forEach((IGtkWidget widget) -> {
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(widget);
+			rootNode.add(node);
+			
+			if(widget instanceof GtkContainer container)
+			{
+				addNodes(node, container);
+			}
+		});
+		tree.setModel(new DefaultTreeModel(rootNode, false));
 	}
 	
 	private void addNodes(DefaultMutableTreeNode superNode, GtkContainer container)

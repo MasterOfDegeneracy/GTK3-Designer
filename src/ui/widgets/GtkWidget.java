@@ -1,18 +1,29 @@
 package ui.widgets;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.annotation.XmlType;
-
+import ui.InterfaceRoot;
 import utils.Nullable;
 import utils.gtkdefs.GdkEventMask;
 import utils.gtkdefs.GtkAlign;
 
-@XmlType(name = GtkWidget.XML_NAME)
 public abstract class GtkWidget implements IGtkWidget
 {
+	public static interface WidgetChangedListener
+	{
+		public void onChange(IGtkWidget widget);
+	}
+	
 	public static final String XML_NAME = "GtkWidget";
+	
+	/**
+	 * The blueprint renderer for this GtkWidget.
+	 * @see IGtkWidget#getBlueprintRenderer() 
+	 */
+	protected BlueprintRenderer blueprintRenderer;
 	
 	/**
 	 * The widget's parent widget. This field contains {@code null} if the widget's
@@ -25,13 +36,34 @@ public abstract class GtkWidget implements IGtkWidget
 	 */
 	protected Map<String, Object> properties;
 	
+	protected InterfaceRoot interfaceRoot;
+	
+	private List<WidgetChangedListener> widgetChangedListeners = new LinkedList<>();
+	
 	/**
 	 * Constructs a new GtkWidget and registers its properties.
 	 */
-	public GtkWidget()
+	public GtkWidget(InterfaceRoot interfaceRoot)
 	{
 		super();
+		
+		this.interfaceRoot = interfaceRoot;
+		
+		this.blueprintRenderer = createBlueprintRenderer();
+			
 		registerProperties(properties = new HashMap<>());
+	}
+	
+	@Override
+	public InterfaceRoot getInterfaceRoot()
+	{
+		return interfaceRoot;
+	}
+	
+	@Override
+	public BlueprintRenderer getBlueprintRenderer()
+	{
+		return blueprintRenderer;
 	}
 	
 	@Override
@@ -162,5 +194,23 @@ public abstract class GtkWidget implements IGtkWidget
 	public String getName()
 	{
 		return (String) properties.get("name");
+	}
+	
+	@Override
+	public void fireChangedListeners()
+	{
+		for(WidgetChangedListener l : widgetChangedListeners)
+			l.onChange(this);
+	}
+	
+	@Override
+	public boolean addWidgetChangedListener(WidgetChangedListener l)
+	{
+		return widgetChangedListeners.add(l);
+	}
+	@Override
+	public boolean removeWidgetChangedListener(WidgetChangedListener l)
+	{
+		return widgetChangedListeners.remove(l);
 	}
 }

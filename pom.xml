@@ -3,7 +3,7 @@
   <groupId>GtkPlusDesigner</groupId>
   <artifactId>GtkPlusDesigner</artifactId>
   <version>0.0.1-alpha</version>
-  <name>Gtk+ Designer</name>
+  <name>Gtk3-Designer</name>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>

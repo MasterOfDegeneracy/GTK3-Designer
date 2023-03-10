@@ -34,8 +34,6 @@ public class GtkLabelRenderer extends WidgetRenderer
 		
 		double angle = label.getAngle();
 		
-		Point pos = widget.getAbsolutePosition();
-		
 		int fontHeight = getContentSize(g.getFontRenderContext(), true).height;
 		
 		Dimension contentSize = getContentSize();
@@ -45,7 +43,7 @@ public class GtkLabelRenderer extends WidgetRenderer
 		g.setColor(Color.black);
 		
 		double fontHeightDelta = fontHeight * Math.cos(angle * (Math.PI / 180));
-		Point stringTopPos = new Point(pos.x, (int) (pos.y + fontHeightDelta));
+		Point stringTopPos = new Point(0, (int) (fontHeightDelta));
 		
 		g.rotate(label.getAngle() * (Math.PI / 180), stringTopPos.x, stringTopPos.y);
 		
@@ -56,7 +54,7 @@ public class GtkLabelRenderer extends WidgetRenderer
 		
 		g.setColor(Color.red);
 		
-		g.drawRect(pos.x, pos.y, contentSize.width, contentSize.height);
+		g.drawRect(0, 0, contentSize.width, contentSize.height);
 	}
 
 	private Dimension getContentSize(FontRenderContext frc, boolean ignoreRotation)
