@@ -1,5 +1,6 @@
 package ui.widgets.gtk.label;
 
+import java.awt.Dimension;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlType;
@@ -30,6 +31,15 @@ public class GtkLabel extends GtkWidget implements RenderableWidget
 	public GtkLabelRenderer getRenderer()
 	{
 		return renderer;
+	}
+	
+	@Override
+	public Dimension getMinimumSize()
+	{
+		Dimension minSize = super.getMinimumSize();
+		Dimension contentSize = renderer.getContentSize();
+		return new Dimension(Math.max(minSize.width, contentSize.width),
+				Math.max(minSize.height, contentSize.height));
 	}
 	
 	@Override

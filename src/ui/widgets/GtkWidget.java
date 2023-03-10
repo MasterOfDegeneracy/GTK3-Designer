@@ -1,5 +1,6 @@
 package ui.widgets;
 
+import java.awt.Dimension;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +16,10 @@ public abstract class GtkWidget implements IGtkWidget
 	public static interface WidgetChangedListener
 	{
 		public void onChange(IGtkWidget widget);
+	}
+	public static interface PropertyListener
+	{
+		public void onPropertyChanged(String propertyName, Object newVal);
 	}
 	
 	public static final String XML_NAME = "GtkWidget";
@@ -39,6 +44,7 @@ public abstract class GtkWidget implements IGtkWidget
 	protected InterfaceRoot interfaceRoot;
 	
 	private List<WidgetChangedListener> widgetChangedListeners = new LinkedList<>();
+	private List<PropertyListener> propertyListeners = new LinkedList<>();
 	
 	/**
 	 * Constructs a new GtkWidget and registers its properties.
@@ -129,6 +135,8 @@ public abstract class GtkWidget implements IGtkWidget
 		}
 		
 		properties.put(propertyName, newValue);
+		fireChangedListeners();
+		firePropertyListeners(propertyName, newValue);
 		return true;
 	}
 	
@@ -179,6 +187,10 @@ public abstract class GtkWidget implements IGtkWidget
 		// window is not writable
 	}
 	
+	public Dimension getMinimumSize()
+	{
+		return new Dimension(getWidthRequest(), getHeightRequest());
+	}
 	public boolean isAppPaintable()
 	{
 		return (boolean) properties.get("app-paintable");
@@ -202,15 +214,28 @@ public abstract class GtkWidget implements IGtkWidget
 		for(WidgetChangedListener l : widgetChangedListeners)
 			l.onChange(this);
 	}
+	public void firePropertyListeners(String propertyName, Object newVal)
+	{
+		for(PropertyListener l : propertyListeners)
+			l.onPropertyChanged(propertyName, newVal);
+	}
 	
 	@Override
 	public boolean addWidgetChangedListener(WidgetChangedListener l)
 	{
 		return widgetChangedListeners.add(l);
 	}
+	public boolean addPropertyListener(PropertyListener l)
+	{
+		return propertyListeners.add(l);
+	}
 	@Override
 	public boolean removeWidgetChangedListener(WidgetChangedListener l)
 	{
 		return widgetChangedListeners.remove(l);
+	}
+	public boolean removePropertyListener(PropertyListener l)
+	{
+		return propertyListeners.remove(l);
 	}
 }

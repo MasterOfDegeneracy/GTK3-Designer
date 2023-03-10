@@ -37,6 +37,7 @@ public class WidgetPanel extends JPanel
 		widgets.setBackground(bgColor);
 		widgets.add(createButton("GtkLabel", ImageResource.GTK_LABEL_ICON_IMAGE, "Add a new GtkLabel..."));
 		widgets.add(createButton("GtkGrid", ImageResource.GTK_GRID_ICON_IMAGE, "Add a new GtkGrid..."));
+		widgets.add(createButton("GtkImage", ImageResource.GTK_IMAGE_ICON_IMAGE, "Add a new GtkImage..."));
 		
 		JScrollPane scrollPane = new JScrollPane(widgets);
 		scrollPane.setBackground(bgColor);

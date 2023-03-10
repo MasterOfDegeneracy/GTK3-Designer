@@ -1,0 +1,12 @@
+package utils.gtkdefs;
+
+public enum GtkImageType
+{
+	GTK_IMAGE_EMPTY,
+	GTK_IMAGE_PIXBUF,
+	GTK_IMAGE_STOCK,
+	GTK_IMAGE_ICON_SET,
+	GTK_IMAGE_ANIMATION,
+	GTK_IMAGE_GICON,
+	GTK_IMAGE_SURFACE;
+}

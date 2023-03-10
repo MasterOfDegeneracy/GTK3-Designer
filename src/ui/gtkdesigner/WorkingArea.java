@@ -18,6 +18,7 @@ import ui.widgets.GtkContainer;
 import ui.widgets.IGtkWidget;
 import ui.widgets.RenderableWidget;
 import ui.widgets.gtk.grid.GtkGrid;
+import ui.widgets.gtk.image.GtkImage;
 import ui.widgets.gtk.label.GtkLabel;
 
 @SuppressWarnings("serial")
@@ -71,6 +72,8 @@ public class WorkingArea extends JPanel
 					newWidget = new GtkLabel(interfaceRoot);
 				else if(strData.equals("GtkGrid"))
 					newWidget = new GtkGrid(interfaceRoot);
+				else if(strData.equals("GtkImage"))
+					newWidget = new GtkImage(interfaceRoot);
 				else
 					throw new UnsupportedOperationException("Not implemented yet.");
 				

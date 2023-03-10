@@ -188,6 +188,9 @@ public class GtkGrid extends GtkContainer
 					highest = req;
 			}
 			
+			if(y == height - 1)
+				highest = Math.max(this.getHeightRequest() - curX, highest); // Fill size request with last cell
+			
 			for(int x = 0; x < width; x++)
 			{
 				int widest = 0;
@@ -197,6 +200,9 @@ public class GtkGrid extends GtkContainer
 					if(req > widest)
 						widest = req;
 				}
+				
+				if(x == width - 1)
+					widest = Math.max(this.getWidthRequest() - curX, widest); // Fill size request with last cell
 				
 				CellData curCellData = grid.get(x).get(y);
 				curCellData.location = new Point(curX, curY);
