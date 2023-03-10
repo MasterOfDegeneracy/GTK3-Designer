@@ -3,6 +3,8 @@ package ui.gtkdesigner;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JFrame;
 
@@ -12,6 +14,11 @@ import ui.widgets.IGtkWidget;
 
 public class EditorWindow
 {
+	public interface SelectionListener
+	{
+		public void onWidgetSelected(IGtkWidget widget);
+	}
+	
 	public static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 	
 	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(
@@ -26,6 +33,8 @@ public class EditorWindow
 	private WorkingArea workingArea;
 	private InterfaceTree interfaceTree;
 	private WidgetPanel widgetPanel;
+	
+	private List<SelectionListener> selectionListeners = new LinkedList<>();
 	
 	private volatile IGtkWidget selectedWidget;
 	
@@ -77,23 +86,31 @@ public class EditorWindow
 		workingArea.setBounds(widgetPanelWidth, 0, workingAreaWidth, (int) (frameSize.height * 0.8));
 		frame.add(workingArea);
 		
-		interfaceTree = new InterfaceTree(interfaceRoot);
+		interfaceTree = new InterfaceTree(this, interfaceRoot);
 		interfaceTree.setBounds(widgetPanelWidth + workingAreaWidth, 0, ifTreeWidth, frameSize.height);
 		interfaceTree.initComponents();
-		interfaceTree.addSelectionListener(this::interfaceTreeSelection);
-		interfaceTree.addSelectionListener((widget)->selectWidget(widget));
+		interfaceTree.addSelectionListener(this::selectWidget);
 		frame.add(interfaceTree);
 		
 		
-		propertyPanel = new PropertyPanel();
+		propertyPanel = new PropertyPanel(this);
 		propertyPanel.setBounds(widgetPanelWidth, (int)(frameSize.height*0.8), workingAreaWidth, (int)(frameSize.height*0.2));
-		propertyPanel.initComponents();
+		propertyPanel.initComponents(interfaceTree);
 		frame.add(propertyPanel);
 	}
 	
-	private void interfaceTreeSelection(IGtkWidget selectedWidget)
+	public boolean addSelectionListener(SelectionListener l)
 	{
-		propertyPanel.initForWidget(selectedWidget);
+		return selectionListeners.add(l);
+	}
+	public boolean removeSelectionListener(SelectionListener l)
+	{
+		return selectionListeners.remove(l);
+	}
+	private void fireSelectionListeners(IGtkWidget w)
+	{
+		for(SelectionListener l : selectionListeners)
+			l.onWidgetSelected(w);
 	}
 	
 	public IGtkWidget getSelectedWidget()
@@ -103,6 +120,7 @@ public class EditorWindow
 	public void selectWidget(IGtkWidget widget)
 	{
 		this.selectedWidget = widget;
+		fireSelectionListeners(widget);
 		frame.repaint();
 	}
 }

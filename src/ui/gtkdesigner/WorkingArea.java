@@ -94,7 +94,10 @@ public class WorkingArea extends JPanel
 						e.rejectDrop();
 				}
 				else
+				{
 					interfaceRoot.addWidget(newWidget);
+					editorWindow.selectWidget(newWidget);
+				}
 			}
 
 		};

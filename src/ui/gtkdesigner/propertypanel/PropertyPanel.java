@@ -5,6 +5,8 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import ui.gtkdesigner.EditorWindow;
+import ui.gtkdesigner.InterfaceTree;
 import ui.widgets.IGtkWidget;
 import ui.widgets.gtk.label.GtkLabel;
 import utils.Nullable;
@@ -27,11 +29,16 @@ public class PropertyPanel extends JPanel
 	 */
 	private IGtkWidget curWidget;
 	
+	public PropertyPanel(EditorWindow ew)
+	{
+		ew.addSelectionListener(widget->initForWidget(widget));
+	}
+	
 	/**
 	 * Initializes this {@code PropertyPanel}. This cannot be done in constructor, because the
 	 * user of this class has to set the bounds of this panel before calling {@code initComponents()}.
 	 */
-	public void initComponents()
+	public void initComponents(InterfaceTree interfaceTree)
 	{
 		setLayout(null);
 		setBackground(BG_COLOR);
@@ -40,6 +47,9 @@ public class PropertyPanel extends JPanel
 		add(tabs);
 		
 		initGtkWidgetTab();
+		
+		interfaceTree.addSelectionListener(widget->initForWidget(widget));
+		
 		
 		initForWidget(null);
 	}

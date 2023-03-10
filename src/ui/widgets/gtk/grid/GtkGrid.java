@@ -19,7 +19,6 @@ import ui.widgets.RenderableWidget;
  */
 public class GtkGrid extends GtkContainer
 {
-	@SuppressWarnings("unused")
 	protected static class CellData
 	{
 		private LinkedList<IGtkWidget> children = new LinkedList<>();
@@ -209,8 +208,6 @@ public class GtkGrid extends GtkContainer
 					highestX = curX;
 			}
 			curX = 0;
-			
-			System.out.println("actualsize set");
 			
 			curY += highest;
 			

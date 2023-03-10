@@ -29,13 +29,15 @@ public class InterfaceTree extends JPanel
 	private LinkedList<Consumer<IGtkWidget>> selectionListeners = new LinkedList<>();
 	
 	private InterfaceRoot interfaceRoot;
+	private EditorWindow editorWindow;
 	private JTree tree;
 	
-	public InterfaceTree(InterfaceRoot interfaceRoot)
+	public InterfaceTree(EditorWindow editorWindow, InterfaceRoot interfaceRoot)
 	{
 		setLayout(null);
 		setBackground(Color.black);
 		
+		this.editorWindow = editorWindow;
 		this.interfaceRoot = interfaceRoot;
 		
 		this.interfaceRoot.addWidgetAddedListener(new WidgetAddedListener() {
@@ -95,6 +97,8 @@ public class InterfaceTree extends JPanel
 					if(userObj instanceof IGtkWidget w)
 						selectedWidget = w;
 				}
+				
+				editorWindow.selectWidget(selectedWidget);
 				
 				for(Consumer<IGtkWidget> l : selectionListeners)
 					l.accept(selectedWidget);
