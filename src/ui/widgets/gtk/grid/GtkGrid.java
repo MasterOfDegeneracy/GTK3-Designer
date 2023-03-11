@@ -139,7 +139,7 @@ public class GtkGrid extends GtkContainer
 		
 		updateChildrenGrid();
 		
-		super.fireChangedListeners();
+		this.fireChangedListeners();
 		
 		return true;
 	}
@@ -239,7 +239,7 @@ public class GtkGrid extends GtkContainer
 	}
 	protected CellData getCellData(int x, int y)
 	{
-		return grid.get(y).get(x);
+		return grid.get(x).get(y);
 	}
 	public int getWidth()
 	{
@@ -253,9 +253,28 @@ public class GtkGrid extends GtkContainer
 	@Override
 	public boolean dropChild(IGtkWidget child, Point relativeLocation)
 	{
-		System.out.println("Drop at " + relativeLocation.toString());
+		Point thisAbsPos = this.getAbsolutePosition();
+		Point absLocation = new Point(thisAbsPos.x + relativeLocation.x, thisAbsPos.y + relativeLocation.y);
+		
 		Point cell = getCellAt(relativeLocation);
 		assert cell != null; // This can not be null becuase a child can only be dropped inside of this GtkGrid and the complete space of this grid is covered by cells.
+		
+		for(IGtkWidget c : getCellData(cell.x, cell.y).children) /* If the child was dropped on a container inside the cell, add the child to the inner container. */
+		{
+			if(!(c instanceof GtkContainer))
+				continue;
+			
+			Point pos = c.getAbsolutePosition();
+			Dimension minSize = c.getMinimumSize();
+			
+			if(new Rectangle(pos, minSize).contains(absLocation))
+			{
+				Point relChildPos = this.getChildPos(c);
+				relativeLocation = new Point(relativeLocation.x - relChildPos.x, relativeLocation.y - relChildPos.y);
+				
+				return ((GtkContainer)c).dropChild(child, relativeLocation);
+			}
+		}
 		
 		return addChild(child, cell.x, cell.y);
 	}

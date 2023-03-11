@@ -9,6 +9,8 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 
 import javax.swing.JPanel;
@@ -108,6 +110,53 @@ public class WorkingArea extends JPanel
 		new DropTarget(this, DnDConstants.ACTION_COPY, dta, true, null);
 		
 		this.setTransferHandler(new WidgetPanelTransferHandler());
+		
+		this.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				Point clickPos = e.getPoint();
+				
+				IGtkWidget widget = interfaceRoot.getTopLevelWidgetAt(clickPos);
+				if(widget != null)
+				{
+					while(true)
+					{
+						if(widget instanceof GtkContainer container)
+						{
+							IGtkWidget innerWidget = container.getChildAt(clickPos);
+							if(innerWidget == null)
+							{
+								ew.selectWidget(widget);
+								break;
+							}
+							widget = innerWidget;
+						}
+						else
+						{
+							ew.selectWidget(widget);
+							break;
+						}
+					}
+				}
+				else
+					ew.selectWidget(null);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) { }
+
+			@Override
+			public void mouseReleased(MouseEvent e) { }
+
+			@Override
+			public void mouseEntered(MouseEvent e) { }
+
+			@Override
+			public void mouseExited(MouseEvent e) { }
+			
+		});
 	}
 	
 	@Override

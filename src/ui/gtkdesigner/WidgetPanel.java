@@ -55,7 +55,6 @@ public class WidgetPanel extends JPanel
 			public void dragGestureRecognized(DragGestureEvent dge)
 			{
 				Transferable transferable = new StringSelection(text);
-				System.out.println("recognized");
 				dge.startDrag(null, transferable);
 			}
 			

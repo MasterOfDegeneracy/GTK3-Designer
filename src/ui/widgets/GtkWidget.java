@@ -211,6 +211,9 @@ public abstract class GtkWidget implements IGtkWidget
 	@Override
 	public void fireChangedListeners()
 	{
+		if(this.hasParent())
+			this.getParent().fireChangedListeners();
+		
 		for(WidgetChangedListener l : widgetChangedListeners)
 			l.onChange(this);
 	}

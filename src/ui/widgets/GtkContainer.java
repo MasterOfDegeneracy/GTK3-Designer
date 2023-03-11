@@ -1,7 +1,9 @@
 package ui.widgets;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -103,6 +105,20 @@ public abstract class GtkContainer extends GtkWidget implements Iterable<IGtkWid
 	 * Returns the relative position of the child
 	 */
 	public abstract Point getChildPos(IGtkWidget child);
+	
+	public IGtkWidget getChildAt(Point absolutePosition)
+	{
+		for(IGtkWidget child : this)
+		{
+			Point pos = child.getAbsolutePosition();
+			Dimension size = child.getMinimumSize();
+			if(new Rectangle(pos, size).contains(absolutePosition))
+			{
+				return child;
+			}
+		}
+		return null;
+	}
 	
 	public abstract boolean dropChild(IGtkWidget child, Point relativeLocation);
 	

@@ -112,7 +112,8 @@ public class InterfaceTree extends JPanel
 	{
 		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(null);
 		
-		interfaceRoot.forEach((IGtkWidget widget) -> {
+		for(IGtkWidget widget : interfaceRoot)
+		{
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(widget);
 			rootNode.add(node);
 			
@@ -120,7 +121,8 @@ public class InterfaceTree extends JPanel
 			{
 				addNodes(node, container);
 			}
-		});
+		}
+		
 		tree.setModel(new DefaultTreeModel(rootNode, false));
 	}
 	
