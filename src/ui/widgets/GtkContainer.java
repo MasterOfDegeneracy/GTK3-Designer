@@ -16,7 +16,7 @@ import ui.gtkdesigner.EditorWindow;
 import utils.Nullable;
 
 @XmlType(name = GtkContainer.XML_NAME)
-public abstract class GtkContainer extends GtkWidget implements Iterable<IGtkWidget>
+public abstract class GtkContainer extends GtkWidget implements Iterable<IGtkWidget>, RenderableWidget
 {
 	public static final String XML_NAME = "GtkContainer";
 	
@@ -127,6 +127,7 @@ public abstract class GtkContainer extends GtkWidget implements Iterable<IGtkWid
 	 */
 	public void sendRecursiveRenderSignal(EditorWindow ew, InterfaceRoot ir, Graphics2D g, Point offset)
 	{
+		getRenderer().render(g, this.getAbsolutePosition());
 		
 		for(IGtkWidget widget : children)
 		{
@@ -145,5 +146,11 @@ public abstract class GtkContainer extends GtkWidget implements Iterable<IGtkWid
 	public Iterator<IGtkWidget> iterator()
 	{
 		return children.iterator();
+	}
+	
+	@Override
+	public WidgetRenderer getRenderer()
+	{
+		return new GtkContainerRenderer(this);
 	}
 }

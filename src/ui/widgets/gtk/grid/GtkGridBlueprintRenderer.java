@@ -20,6 +20,7 @@ public class GtkGridBlueprintRenderer extends BlueprintRenderer
 	public void render(Graphics2D g)
 	{
 		g.setColor(CELL_BOUNDS_COLOR);
+		
 		GtkGrid grid = (GtkGrid)this.widget;
 		
 		for(LinkedList<CellData> row : grid.grid)
