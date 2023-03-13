@@ -17,13 +17,15 @@ public class BlueprintRenderer extends WidgetRenderer
 	@Override
 	public void render(Graphics2D g)
 	{
+		Dimension actualSize = widget.getActualSize();
+		
 		g.setColor(new Color(255, 255, 255, 30));
-		g.fillRect(0, 0, widget.getMinimumSize().width, widget.getMinimumSize().height);
+		g.fillRect(0, 0, actualSize.width, actualSize.height);
 		
 		g.setColor(BORDER_COLOR);
 		
-		int width = widget.getMinimumSize().width;
-		int height = widget.getMinimumSize().height;
+		int width = actualSize.width;
+		int height = actualSize.height;
 		
 		g.drawRect(BORDER_OFFSET, BORDER_OFFSET, width - BORDER_OFFSET * 2, height - BORDER_OFFSET * 2);
 	}

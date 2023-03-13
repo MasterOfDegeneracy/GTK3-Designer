@@ -100,7 +100,19 @@ public class GtkGrid extends GtkContainer
 			for(CellData data : row)
 				for(IGtkWidget curChild : data.children)
 					if(child == curChild)
+					{
+						/* Calculate center position of the widget inside the cell */
+						Dimension childSize = child.getActualSize();
+						Dimension cellSize = data.actualSize;
+						
+						/* If the following assertion is true, the Dimension created afterwards have a non-negative width and height.
+						 * The assertion should always be correct because the cell can not be smaller than the effective size of a child widget. */
+						assert childSize.width <= cellSize.width && childSize.height <= cellSize.height;
+						
+						Dimension difference = new Dimension(cellSize.width - childSize.width, cellSize.height - childSize.height);
+						
 						return data.location;
+					}
 		throw new IllegalArgumentException("This child is not contained in this grid.");
 	}
 
@@ -250,6 +262,15 @@ public class GtkGrid extends GtkContainer
 		return height;
 	}
 	
+	public CellData getCellByChild(IGtkWidget child)
+	{
+		for(LinkedList<CellData> row : grid)
+			for(CellData cell : row)
+				if(cell.children.contains(child))
+					return cell;
+		return null;
+	}
+	
 	@Override
 	public boolean dropChild(IGtkWidget child, Point relativeLocation)
 	{
@@ -265,9 +286,9 @@ public class GtkGrid extends GtkContainer
 				continue;
 			
 			Point pos = c.getAbsolutePosition();
-			Dimension minSize = c.getMinimumSize();
+			Dimension size = c.getActualSize();
 			
-			if(new Rectangle(pos, minSize).contains(absLocation))
+			if(new Rectangle(pos, size).contains(absLocation))
 			{
 				Point relChildPos = this.getChildPos(c);
 				relativeLocation = new Point(relativeLocation.x - relChildPos.x, relativeLocation.y - relChildPos.y);
@@ -277,5 +298,36 @@ public class GtkGrid extends GtkContainer
 		}
 		
 		return addChild(child, cell.x, cell.y);
+	}
+
+	@Override
+	public Dimension getChildSizeForSettings(IGtkWidget child, ChildSizeOption... options)
+	{
+		Dimension childSize = child.getMinimumSize();
+		
+		boolean useHExpand = false;
+		boolean useVExpand = false;
+		for(ChildSizeOption option : options)
+		{
+			if(option == null)
+				continue;
+			switch(option)
+			{
+			case USE_VEXPAND:
+				useVExpand = true;
+				break;
+			case USE_HEXPAND:
+				useHExpand = true;
+				break;
+			}
+		}
+		
+		CellData cellData = this.getCellByChild(child);
+		
+		if(useVExpand)
+			childSize.width = cellData.actualSize.width;
+		if(useHExpand)
+			childSize.height = cellData.actualSize.height;
+		return childSize;
 	}
 }

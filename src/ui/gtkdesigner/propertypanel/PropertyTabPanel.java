@@ -64,6 +64,8 @@ public abstract class PropertyTabPanel extends JPanel
 		return box;
 	}
 	
+	public abstract void refresh(IGtkWidget data);
+	
 	protected Consumer<Boolean> createCheckBoxCallback(String property)
 	{
 		return (checked)-> {

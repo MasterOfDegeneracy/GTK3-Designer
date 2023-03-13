@@ -9,7 +9,7 @@ import ui.widgets.gtk.grid.GtkGrid.CellData;
 
 public class GtkGridBlueprintRenderer extends BlueprintRenderer
 {
-	public static final Color CELL_BOUNDS_COLOR = new Color(100, 100, 100);
+	public static final Color CELL_BOUNDS_COLOR = new Color(97, 88, 82, 255);
 
 	public GtkGridBlueprintRenderer(GtkGrid widget)
 	{

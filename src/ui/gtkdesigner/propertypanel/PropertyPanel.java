@@ -68,11 +68,17 @@ public class PropertyPanel extends JPanel
 		
 		if(widget != null)
 		{
-			tabs.add("GtkWidget", gtkWidgetTab);
+			addTab("GtkWidget", gtkWidgetTab, widget);
 			
 			if(widget instanceof GtkLabel)
-				tabs.add("GtkLabel", gtkLabelTab);
+				addTab("GtkLabel", gtkLabelTab, widget);
 		}
+	}
+	
+	private void addTab(String title, PropertyTabPanel tab, IGtkWidget widgetData)
+	{
+		tabs.add(title, tab);
+		tab.refresh(widgetData);
 	}
 	
 	/**

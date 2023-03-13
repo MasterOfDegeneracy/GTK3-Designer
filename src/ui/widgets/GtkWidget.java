@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import ui.InterfaceRoot;
+import ui.widgets.GtkContainer.ChildSizeOption;
 import utils.Nullable;
 import utils.gtkdefs.GdkEventMask;
 import utils.gtkdefs.GtkAlign;
@@ -159,8 +160,8 @@ public abstract class GtkWidget implements IGtkWidget
 		properties.put("has-focus", false);
 		properties.put("has-tooltip", false);
 		properties.put("height-request", -1);
-		properties.put("hexpand", false);
-		properties.put("hexpand-set", false);
+		properties.put("hexpand", true);
+		properties.put("hexpand-set", true);
 		properties.put("is-focus", false);
 		properties.put("margin", 0);
 		properties.put("margin-bottom", 0);
@@ -180,8 +181,8 @@ public abstract class GtkWidget implements IGtkWidget
 		properties.put("tooltip-markup", "");
 		properties.put("tooltip-text", "");
 		properties.put("valign", GtkAlign.GTK_ALIGN_CENTER);
-		properties.put("vexpand", false);
-		properties.put("vexpand-set", false);
+		properties.put("vexpand", true);
+		properties.put("vexpand-set", true);
 		properties.put("visible", true);
 		properties.put("width-request", -1);
 		// window is not writable
@@ -203,9 +204,38 @@ public abstract class GtkWidget implements IGtkWidget
 	{
 		return (int) properties.get("height-request");
 	}
+	public boolean isHExpand()
+	{
+		return (boolean) properties.get("hexpand");
+	}
+	public boolean isHExpandSet()
+	{
+		return (boolean) properties.get("hexpand-set");
+	}
+	public boolean isVExpand()
+	{
+		return (boolean) properties.get("vexpand");
+	}
+	public boolean isVExpandSet()
+	{
+		return (boolean) properties.get("vexpand-set");
+	}
 	public String getName()
 	{
 		return (String) properties.get("name");
+	}
+	
+	public Dimension getActualSize()
+	{
+		if(hasParent())
+		{
+			ChildSizeOption[] options = new ChildSizeOption[] {
+				isHExpandSet() && isHExpand() ? ChildSizeOption.USE_HEXPAND : null,
+				isVExpandSet() && isVExpand() ? ChildSizeOption.USE_VEXPAND : null
+			};
+			return this.getParent().getChildSizeForSettings(this, options);
+		}
+		return this.getMinimumSize();
 	}
 	
 	@Override

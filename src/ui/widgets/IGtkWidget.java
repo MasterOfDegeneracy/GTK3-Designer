@@ -83,4 +83,6 @@ public interface IGtkWidget
 	public void fireChangedListeners();
 	public boolean addWidgetChangedListener(WidgetChangedListener l);
 	public boolean removeWidgetChangedListener(WidgetChangedListener l);
+	
+	public Dimension getActualSize();
 }
