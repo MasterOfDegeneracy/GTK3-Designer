@@ -1,6 +1,7 @@
 package ui.gtkdesigner;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -157,6 +158,27 @@ public class WorkingArea extends JPanel
 			public void mouseExited(MouseEvent e) { }
 			
 		});
+	}
+	
+	@Override
+	public Dimension getPreferredSize()
+	{
+		int highestY = 0;
+		IGtkWidget highestYWidget = null;
+		for(IGtkWidget widget : interfaceRoot)
+		{
+			Point pos = interfaceRoot.getTopLevelWidgetPosition(widget);
+			if(pos.y > highestY)
+			{
+				highestY = pos.y;
+				highestYWidget = widget;
+			}
+		}
+		
+		if(highestYWidget == null)
+			return new Dimension(0, 0);
+		
+		return new Dimension(200, highestY + highestYWidget.getActualSize().height);
 	}
 	
 	@Override

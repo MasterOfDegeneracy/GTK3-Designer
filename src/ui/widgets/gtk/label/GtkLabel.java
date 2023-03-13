@@ -1,6 +1,7 @@
 package ui.widgets.gtk.label;
 
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlType;
@@ -79,6 +80,16 @@ public class GtkLabel extends GtkWidget implements RenderableWidget
 		properties.put("yalign", 0.5f);
 	}
 	
+	@Override
+	public boolean setProperty(String propertyName, Object newValue)
+	{
+		if(!super.setProperty(propertyName, newValue))
+			return false;
+		if(propertyName.equals("label"))
+			this.updateSize();
+		return true;
+	}
+	
 	public double getAngle()
 	{
 		return (double) properties.get("angle");
@@ -86,6 +97,28 @@ public class GtkLabel extends GtkWidget implements RenderableWidget
 	public String getLabel()
 	{
 		return (String) properties.get("label");
+	}
+	public void setLabel(String label)
+	{
+		this.setProperty("label", label);
+	}
+	
+	@Override
+	public void receiveKeyPress(char keyChar)
+	{
+		String prevLabel = getLabel();
+		
+		switch(keyChar)
+		{
+		case KeyEvent.VK_BACK_SPACE:
+			if(prevLabel.length() >= 1)
+				setLabel(prevLabel.substring(0, prevLabel.length() - 1));
+			break;
+		case KeyEvent.VK_ENTER:
+			break; // TODO support multi-line labels
+		default:
+			setLabel(prevLabel + keyChar);
+		}
 	}
 	
 }

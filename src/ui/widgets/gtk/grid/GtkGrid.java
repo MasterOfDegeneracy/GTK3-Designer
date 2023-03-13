@@ -100,19 +100,7 @@ public class GtkGrid extends GtkContainer
 			for(CellData data : row)
 				for(IGtkWidget curChild : data.children)
 					if(child == curChild)
-					{
-						/* Calculate center position of the widget inside the cell */
-						Dimension childSize = child.getActualSize();
-						Dimension cellSize = data.actualSize;
-						
-						/* If the following assertion is true, the Dimension created afterwards have a non-negative width and height.
-						 * The assertion should always be correct because the cell can not be smaller than the effective size of a child widget. */
-						assert childSize.width <= cellSize.width && childSize.height <= cellSize.height;
-						
-						Dimension difference = new Dimension(cellSize.width - childSize.width, cellSize.height - childSize.height);
-						
 						return data.location;
-					}
 		throw new IllegalArgumentException("This child is not contained in this grid.");
 	}
 
@@ -184,6 +172,12 @@ public class GtkGrid extends GtkContainer
 	 */
 	private void updateChildrenGrid()
 	{
+		/* Update size requests */
+		for(LinkedList<CellData> row : grid)
+			for(CellData data : row)
+				data.updateSizeRequest();
+		
+		/* Update Layout */
 		int curX = 0;
 		int curY = 0;
 		
@@ -329,5 +323,11 @@ public class GtkGrid extends GtkContainer
 		if(useHExpand)
 			childSize.height = cellData.actualSize.height;
 		return childSize;
+	}
+
+	@Override
+	public void updateSize()
+	{
+		updateChildrenGrid();
 	}
 }

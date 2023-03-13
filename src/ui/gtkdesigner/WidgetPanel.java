@@ -43,7 +43,7 @@ public class WidgetPanel extends JPanel
 		scrollPane.setBackground(bgColor);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(0, 0, getWidth(), getHeight());
+		scrollPane.setBounds(0, 0, getPreferredSize().width, getPreferredSize().height);
 		add(scrollPane);
 	}
 	

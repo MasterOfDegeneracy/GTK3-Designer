@@ -19,7 +19,7 @@ public class GtkContainerRenderer extends WidgetRenderer
 	public void render(Graphics2D g)
 	{
 		g.setColor(BG_COLOR);
-		Dimension size = widget.getActualSize();
+		Dimension size = widget.getMinimumSize();
 		g.fillRect(0, 0, size.width, size.height);
 		
 		g.setColor(BORDER_COLOR);

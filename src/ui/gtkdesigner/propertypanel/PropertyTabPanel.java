@@ -42,10 +42,10 @@ public abstract class PropertyTabPanel extends JPanel
 			boolean selected, @Nullable Consumer<Boolean> onStateChanged)
 	{
 		JCheckBox box = new JCheckBox(text, icon, selected);
-		
 		if(bounds != null)
 			box.setBounds(bounds);
 		
+		box.setFocusable(false);
 		box.setToolTipText(hoverHint);
 		box.setForeground(Color.white);
 		box.setBackground(Color.black);
@@ -72,9 +72,7 @@ public abstract class PropertyTabPanel extends JPanel
 			IGtkWidget gtkWidget = propPanel.getWidget();
 			
 			assert gtkWidget != null; /* This can not equal null becuase no GtkWidgetTab should exist if no GtkWidget is selected in the PropertyPanel. */
-			
-			System.out.println("Updated property " + property + " to " + checked);
-			
+
 			gtkWidget.setProperty(property, checked);
 		};
 	}

@@ -1,6 +1,7 @@
 package ui.gtkdesigner;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
@@ -75,7 +76,7 @@ public class InterfaceTree extends JPanel
 		tree = new JTree();
 		refreshTree();
 		tree.setCellRenderer(new InterfaceTreeRenderer());
-		tree.setBounds(0, 0, getWidth(), getHeight());
+		tree.setBounds(0, 0, getPreferredSize().width, getPreferredSize().height);
 		tree.setBackground(BG_COLOR);
 		tree.setSelectionModel(selectionModel);
 		tree.setRootVisible(false);
@@ -138,5 +139,13 @@ public class InterfaceTree extends JPanel
 				addNodes(node, subContainer);
 			}
 		}
+	}
+	
+	@Override
+	public void setPreferredSize(Dimension dimension)
+	{
+		super.setPreferredSize(dimension);
+		if(tree != null)
+			tree.setBounds(0, 0, dimension.width, dimension.height);
 	}
 }

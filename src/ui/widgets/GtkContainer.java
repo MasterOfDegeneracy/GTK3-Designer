@@ -116,7 +116,7 @@ public abstract class GtkContainer extends GtkWidget implements Iterable<IGtkWid
 		for(IGtkWidget child : this)
 		{
 			Point pos = child.getAbsolutePosition();
-			Dimension size = child.getActualSize();
+			Dimension size = child.getMinimumSize();
 			if(new Rectangle(pos, size).contains(absolutePosition))
 			{
 				return child;
@@ -142,21 +142,7 @@ public abstract class GtkContainer extends GtkWidget implements Iterable<IGtkWid
 			if(widget instanceof RenderableWidget renderable)
 			{
 				Point absPosition = renderable.getAbsolutePosition();
-				if(widget.hasParent())
-				{
-					/* If the widget is inside a container, the hexpand and vexpand properties can modify the location the widget should
-					 * appear. */
-					Point drawPosition = new Point(absPosition.x, absPosition.y);
-					
-					Dimension actualSize = widget.getActualSize(); /* The size the widget actually has */
-					Dimension minSize = widget.getMinimumSize(); /* The minimum size of the widget's content */
-					
-					Dimension difSize = new Dimension(actualSize.width - minSize.width, actualSize.height - minSize.height);
-				
-					renderable.getRenderer().render(g, new Point(drawPosition.x + offset.x + difSize.width / 2, drawPosition.y + offset.y + difSize.height / 2));
-				}
-				else
-					renderable.getRenderer().render(g, new Point(absPosition.x + offset.x, absPosition.y + offset.y));
+				renderable.getRenderer().render(g, new Point(absPosition.x + offset.x, absPosition.y + offset.y));
 			}
 			
 			if(ew.getSelectedWidget() == widget)

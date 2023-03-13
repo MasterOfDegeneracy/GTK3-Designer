@@ -46,6 +46,14 @@ public interface IGtkWidget
 		Point pt = parent.getAbsolutePosition();
 		Point relPos = parent.getChildPos(this);
 		pt = new Point(pt.x + relPos.x, pt.y + relPos.y);
+		
+		Dimension actualSize = getActualSize(); /* The size the widget actually has */
+		Dimension minSize = getMinimumSize(); /* The minimum size of the widget's content */
+		
+		Dimension difSize = new Dimension(actualSize.width - minSize.width, actualSize.height - minSize.height);
+		pt.x += difSize.width / 2;
+		pt.y += difSize.height / 2;
+		
 		return pt;
 	}
 	
@@ -85,4 +93,12 @@ public interface IGtkWidget
 	public boolean removeWidgetChangedListener(WidgetChangedListener l);
 	
 	public Dimension getActualSize();
+	
+	public default void updateSize()
+	{
+		if(this.hasParent())
+			this.getParent().updateSize();
+	}
+	
+	public default void receiveKeyPress(char keyChar) { }
 }

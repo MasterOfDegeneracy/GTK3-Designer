@@ -1,6 +1,7 @@
 package ui.gtkdesigner.propertypanel;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -43,7 +44,7 @@ public class PropertyPanel extends JPanel
 		setLayout(null);
 		setBackground(BG_COLOR);
 		
-		tabs.setBounds(0, 0, getWidth(), getHeight());
+		tabs.setBounds(0, 0, getPreferredSize().width, getPreferredSize().height);
 		add(tabs);
 		
 		initGtkWidgetTab();
@@ -96,5 +97,12 @@ public class PropertyPanel extends JPanel
 		
 		gtkLabelTab = new GtkLabelTab(this);
 		gtkLabelTab.initComponents();
+	}
+	
+	@Override
+	public void setPreferredSize(Dimension size)
+	{
+		super.setPreferredSize(size);
+		tabs.setBounds(0, 0, size.width, size.height);
 	}
 }

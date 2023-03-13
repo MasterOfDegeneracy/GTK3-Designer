@@ -72,9 +72,6 @@ public class GtkWidgetTab extends PropertyTabPanel
 			String propertyName = entry.getKey();
 			JCheckBox checkBox = entry.getValue();
 			checkBox.setSelected((boolean)data.getProperties().get(propertyName));
-			
-			if(propertyName.equals("vexpand"))
-				System.out.println(checkBox.isSelected());
 		}
 	}
 }
